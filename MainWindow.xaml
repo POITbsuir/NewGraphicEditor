@@ -1,0 +1,84 @@
+﻿<Window x:Class="NewGraphicEditor.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:NewGraphicEditor"
+        mc:Ignorable="d"
+        Title="MainWindow" Height="450" Width="640" WindowStartupLocation="CenterScreen" WindowStyle="ToolWindow" Background="White">
+
+    <Window.Resources>
+        <Style TargetType="TextBlock">
+            <Setter Property="FontSize" Value="14"/>
+        </Style>
+        <Style TargetType="TextBox">
+            <Setter Property="FontSize" Value="14"/>
+        </Style>
+    </Window.Resources>
+
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="39*"/>
+            <RowDefinition Height="23*"/>
+        </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="81*"/>
+            <ColumnDefinition Width="47*"/>
+        </Grid.ColumnDefinitions>
+
+        <!-- Canvas для рисования -->
+        <Canvas x:Name="MyCanvas" Grid.Column="0" Grid.RowSpan="2" Background="White" Margin="5"/>
+
+        <!-- StackPanel для ввода координат -->
+        <StackPanel Grid.Column="1" Background="AntiqueWhite" Grid.RowSpan="2" Margin="5" DataContext="{Binding Shape}">
+            <TextBlock Text="Ваша фигура: " Margin="5"/>
+            <TextBox Text="{Binding NameShape, UpdateSourceTrigger=PropertyChanged}" Margin="5"/>
+
+            <TextBlock Text="Точка X: " Margin="5"/>
+            <TextBox Text="{Binding DataContext.InputX, RelativeSource={RelativeSource AncestorType=Window}, UpdateSourceTrigger=PropertyChanged}" Margin="5"/>
+
+            <TextBlock Text="Точка Y: " Margin="5"/>
+            <TextBox Text="{Binding DataContext.InputY, RelativeSource={RelativeSource AncestorType=Window}, UpdateSourceTrigger=PropertyChanged}" Margin="5"/>
+
+            <Button Content="Добавить точку" 
+                    Command="{Binding DataContext.AddPointCommand, RelativeSource={RelativeSource AncestorType=Window}}"
+                    CommandParameter="{Binding ElementName=MyCanvas}"
+                    Height="40" 
+                    Width="200" 
+                    Background="LimeGreen" 
+                    Margin="5"/>
+            <TextBlock Text="{Binding Info, UpdateSourceTrigger=PropertyChanged}" 
+                       Height="60" 
+                       TextWrapping="Wrap" 
+                       Margin="5"/>
+        </StackPanel>
+
+        <Button Content="Добавить фигуру" 
+        Command="{Binding AddNewShape}"
+        Background="IndianRed"
+        Grid.Column="1" Grid.Row="1" Margin="25,53,18,63" />
+
+        <Button Content="Удалить фигуру" 
+        Command="{Binding DeleteShape}"
+        CommandParameter="{Binding Shape}"
+        Background="CornflowerBlue" 
+        Grid.Column="1" Grid.Row="1" Margin="25,103,18,10"
+                />
+
+        <!-- ListBox для отображения фигур -->
+        <ListBox Grid.Column="0" 
+                 Grid.Row="1" 
+                 Background="AliceBlue"
+                 ItemsSource="{Binding CollectionShapes.ListShapes}"
+                 SelectedItem="{Binding Shape}"
+                 Margin="5">
+            <ListBox.ItemTemplate>
+                <DataTemplate>
+                    <StackPanel Margin="5">
+                        <TextBlock FontSize="18" Text="{Binding Path=NameShape}"/>
+                    </StackPanel>
+                </DataTemplate>
+            </ListBox.ItemTemplate>
+        </ListBox>
+    </Grid>
+</Window>
